@@ -1,11 +1,7 @@
 ## Import DeepFace for facial recognition
-## Import numpy for boolean arrays
 ## Import cv2 for Image Capture
 from deepface import DeepFace
-import numpy as np
 import cv2
-import fnmatch
-import os
 
 ## Define different model types, metrics and backends available for DeepFace as array for human readability
 models = [
