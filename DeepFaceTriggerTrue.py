@@ -1,6 +1,5 @@
 ## Import dependencies
 from deepface import DeepFace
-import numpy as np
 import cv2
 import fnmatch
 import os
