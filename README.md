@@ -9,6 +9,9 @@ DeepFaceTriggerTrue.py contains function that would be run by the main program w
 To add images to admin database, add to imgDataCount directory with sequential numbers. Keep "0.jpg" for initializing purposes
 
 Main Dependencies:
+
 Python 3.11.0
+
 deepface 0.0.89
+
 tf-keras 2.16.0
