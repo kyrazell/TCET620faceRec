@@ -37,7 +37,7 @@ def faceVerify(
 
     ## Define image paths for all admin faces (Increasing pictures significantly affects computation time)
     imgPaths = [imgLoc + '\\0.jpg']
-    for i in range(0,len(fnmatch.filter(os.listdir(imgLoc), '*.jpg'))):
+    for i in range(1,len(fnmatch.filter(os.listdir(imgLoc), '*.jpg')) - 1):
         imgPaths.append(imgLoc + "\\" + str(i) + ".jpg")
 
     ## Initialize boolean matrix to identify if any of the faces captured in the frame match an admin face
