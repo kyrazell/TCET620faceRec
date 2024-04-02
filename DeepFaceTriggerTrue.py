@@ -11,20 +11,15 @@ def faceVerify(
     distanceMetric: str = "cosine",
 ) -> Dict[str, Any]:
     """
-    Verify if an detected face matches admin faces.
+    Verify if a detected face matches admin faces.
 
     The verification function converts facial images to vectors and calculates the similarity
     between those vectors. Vectors of images of the same person should exhibit higher similarity
     (or lower distance) than vectors of images of different persons.
 
     Args:
-        img1_path (str or np.ndarray or List[float]): Path to the first image.
-            Accepts exact image path as a string, numpy array (BGR), base64 encoded images
-            or pre-calculated embeddings.
-
-        img2_path (str or np.ndarray or  or List[float]): Path to the second image.
-            Accepts exact image path as a string, numpy array (BGR), base64 encoded images
-            or pre-calculated embeddings.
+        imgLoc (str): Path to face images.
+            Accepts exact image path as a string, all images in path must be .jpg files with filenames as ascending numbers from 0 i.e. "0.jpg" "1.jpg".
 
         modelName (str): Model for face recognition. Options: VGG-Face, Facenet, Facenet512,
             OpenFace, DeepFace, DeepID, Dlib, ArcFace, SFace and GhostFaceNet (default is VGG-Face).
