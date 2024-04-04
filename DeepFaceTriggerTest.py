@@ -1,7 +1,11 @@
 ## Import DeepFace for facial recognition
+## Import numpy for boolean arrays
 ## Import cv2 for Image Capture
 from deepface import DeepFace
+import numpy as np
 import cv2
+import fnmatch
+import os
 
 ## Define different model types, metrics and backends available for DeepFace as array for human readability
 models = [
@@ -33,12 +37,22 @@ backends = [
 
 ## Define image paths for all admin faces (Increasing pictures significantly affects computation time)
 ## Currently hardcoded in, can easily be modified to for loop for all images in directory (see DeepFaceTriggerTrue.py) 
-imgPaths = [
-  "imgDataNamed\Kriz.jpg", 
-  "imgDataNamed\MattB.jpg", 
-  "imgDataNamed\DJ.jpg", 
-  "imgDataNamed\Brayden.jpg", 
+adminNames = [
+  "Kriz", 
+  "MattB", 
+  "DJ", 
+  "Brayden" 
 ]
+
+imgLoc = "imgDataCount"
+imgLocI = imgLoc + "\I"
+
+imgPathsC = [imgLocI + '0.jpg']
+for i in range(1,len(fnmatch.filter(os.listdir(imgLoc), '*.jpg'))):
+    imgPathsC.append(imgLocI + str(i) + ".jpg")
+
+imgPaths = imgPathsC[1:]
+print(len(imgPaths))
 
 #### Ignore
 #### Test Code being worked on to use face embeddings directly for verification to lighten computational load/alleviate freezing
@@ -49,6 +63,7 @@ imgPaths = [
 
 ## Initialize boolean matrix to identify if any of the faces captured in the frame match an admin face
 adminStatus = [False]
+adminFace = [""]
 
 ## Initialize selected camera and camera window
 liveCam = cv2.VideoCapture(0)
@@ -73,7 +88,19 @@ while True:
                           model_name = models[0]    
                 )
                 adminStatus.append(result['verified'])              ## Print boolean verified result to adminStatus boolean array
+                if result['verified'] == True :
+                    adminFace.append(adminNames[j])                 ## If any of the admin faces match, adminFace is updated
+                print(j)
             except ValueError:                                      ## If no face is detected in frame, return false
                 adminStatus.append(False)
-        adminVerify = max(adminStatus)                              ## if any of the admin faces match, adminVerify returns true (Check DeepFaceTriggerTrue.py)
+                adminFace.append("No Face Detected")
+
+        adminVerify = adminStatus[1:]
+        adminStatus = [False]                                       ## Reset adminStatus for next capture
+        if len(adminFace)== 1 :
+            adminFace.append("Stranger")                            ## if no admin faces match, adminFace is updated with Stranger
+        faceRecognized = adminFace[1:]
+        adminFace = [""]                                            ## Reset adminFace for next capture
+        
         print(adminVerify)                                          ## Print boolean value of if admin or not
+        print(faceRecognized)                                       ## Print names of faces recognized
