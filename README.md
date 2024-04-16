@@ -16,4 +16,4 @@ Python 3.11.0
 
 deepface 0.0.89
 
-tf-keras 2.16.0
+tensorflow 2.12
