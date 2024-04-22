@@ -35,7 +35,7 @@ backends = [
   'fastmtcnn',
 ]
 
-## Define image paths for all admin faces (Increasing pictures significantly affects computation time)
+## Define image paths for all admin faces (Increasing pictures significantly affects pre-computation time)
 
 imgLoc = "imgDataCount"
 imgPaths = os.listdir(imgLoc)
@@ -55,28 +55,39 @@ adminFace = [""]
 ## Initialize selected camera and camera window
 liveCam = cv2.VideoCapture(0)
 
-cv2.namedWindow("Test")                                             ## Initialize display window; Unnecessary in final implementation unless live video display would be interrupted otherwise
+cv2.namedWindow("Feed")                                                     ## Initialize display window
 
 ## Run face verification against each face in admin database
 while True:
-    ret, frame = liveCam.read()                                     ## Test if cv2/camera supports multi-output (May interrupt live video output if camera 0 is seized)
+    ret, frame = liveCam.read()                                             ## Initialize capture
     
-    cv2.imshow("Test", frame)                                       ## Show display window; Unnecessary in final implementation unless live video display would be interrupted otherwise
+    cv2.imshow("Feed", frame)                                               ## Show display window
 
-    k = cv2.waitKey(1)                                              ## Initialize trigger; Unnecessary in final implementatiion assuming full script is run on trigger (gesture)
+    k = cv2.waitKey(1)                                                      ## Initialize trigger
 
-    if k == ord('q') :
+    if k == ord('q') :                                                      ## Designate trigger for quitting, currently letter q
         exit()
 
-    if k == ord('c'):                                               ## Designate trigger, currently letter c on keyboard; Unnecessary in final implementatiion assuming full script is run on trigger
-        testImg = "Test.jpg"                                        ## Define name for captured frame
-        cv2.imwrite(testImg, frame)                                 ## Capture frame
+    if k == ord('e'):                                                       ## Designate trigger for embedding, currently letter e
+        embedImg = imgLoc + "\\" + input("Please input name: ") + ".jpg"    ## Prompt name for individual being embedded
+        cv2.imwrite(embedImg, frame)                                        ## Capture frame
+        try:
+            embedTest = DeepFace.represent(img_path = embedImg)[0]['embedding']
+            embeddings.append(embedTest)
+            imgPaths.append(embedImg)
+        except ValueError:
+            embedTest = []
+            print("Please retake image")
+
+    if k == ord('c'):                                                       ## Designate trigger for capturing, currently letter c 
+        testImg = "Test.jpg"                                                ## Define name for captured frame
+        cv2.imwrite(testImg, frame)                                         ## Capture frame
         try:
             embedTest = DeepFace.represent(img_path = testImg)[0]['embedding']
         except ValueError:
             embedTest = []
             print("Please retake image")
-        for j in range(0,len(imgPaths)):                            ## Loop through each admin face and test if any faces captured on frame match admin
+        for j in range(0,len(imgPaths)):                                    ## Loop through each face and test if any faces captured on frame match admin
             try:
                 result = DeepFace.verify(img1_path = embeddings[j], 
                             img2_path = embedTest, 
@@ -85,13 +96,13 @@ while True:
                             silent = True
                 )
                 if result['verified'] == True :
-                    adminTest = imgPaths[j]                         ## If any of the admin faces match, adminFace is updated
+                    adminTest = imgPaths[j]                                 ## If any of the admin faces match, adminFace is updated
                     adminFace.append(adminTest[13:-4])
                 print(j)
-            except ValueError:                                      ## If no face is detected in frame, return false
+            except ValueError:                                              ## If no face is detected in frame return notice
                 adminFace.append("No Face Detected")
         if len(adminFace)== 1 :
-            adminFace.append("Stranger")                            ## if no admin faces match, adminFace is updated with Stranger
+            adminFace.append("Stranger")                                    ## if no admin faces match, adminFace is updated with Stranger
         faceRecognized = adminFace[1]
-        adminFace = [""]                                            ## Reset adminFace for next capture
-        print(faceRecognized)                                       ## Print names of faces recognized
+        adminFace = [""]                                                    ## Reset adminFace for next capture
+        print(faceRecognized)                                               ## Print name of face recognized (assuming narrow FOV)
