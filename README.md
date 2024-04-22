@@ -2,13 +2,15 @@ TCET 620 - Applied Machine Learning - Dr. Clark Hochgraf
 
 Facial Recognition Team
 
-DeepFaceTriggerTest.py is the standalone script used for testing implementation
+DeepFaceTriggerTest.py is the standalone script used for testing and implementation [STABLE]
 
-DeepFaceTriggerTrue.py contains function that would be run by the main program when the admin gesture is triggered (Returns boolean value as to whether individual in frame is admin)
+DeepFaceTriggerBound.py is functionally identical to DeepFaceTriggerTest, but only tests against the most prominent face in frame [BETA]
 
-DeepFaceTriggerFace.py contains same function as True, but returns admin name
+DeepFaceTriggerTrue.py contains function that would be run by the main program when the admin gesture is triggered (Returns boolean value as to whether individual in frame is admin) [DEPRECATED]
 
-To add images to admin database, add .jpg file to imgDataCount directory with I followed by sequential numbers, eg. 'I1.jpg', 'I2.jpg'. Keep 'I0.jpg' for initializing purposes
+DeepFaceTriggerFace.py contains same function as True, but returns admin name [DEPRECATED]
+
+To add images to admin database, add "NAME.jpg" file to imgDataCount directory, or use live embed function in DeepFaceTriggerTest and DeepFaceTriggerBound
 
 Main Dependencies:
 
