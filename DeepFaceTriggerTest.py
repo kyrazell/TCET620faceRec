@@ -36,33 +36,20 @@ backends = [
 ]
 
 ## Define image paths for all admin faces (Increasing pictures significantly affects computation time)
-## Currently hardcoded in, can easily be modified to for loop for all images in directory (see DeepFaceTriggerTrue.py) 
-adminNames = [
-  "Kriz", 
-  "MattB", 
-  "DJ", 
-  "Brayden" 
-]
 
 imgLoc = "imgDataCount"
-imgLocI = imgLoc + "\I"
+imgPaths = os.listdir(imgLoc)
+embeddings = []
 
-imgPathsC = [imgLocI + '0.jpg']
-for i in range(1,len(fnmatch.filter(os.listdir(imgLoc), '*.jpg'))):
-    imgPathsC.append(imgLocI + str(i) + ".jpg")
+for i in range(0,len(imgPaths)):
+    imgPaths[i] = imgLoc + "\\" + imgPaths[i]
+    embedding_obj = DeepFace.represent(img_path = imgPaths[i])[0]['embedding']
+    embeddings.append(embedding_obj)
+    
+print(imgPaths)
 
-imgPaths = imgPathsC[1:]
-print(len(imgPaths))
 
-#### Ignore
-#### Test Code being worked on to use face embeddings directly for verification to lighten computational load/alleviate freezing
-####
-####  Convert all images in admin face database to embeddings
-##for i in range(0,len(imgPaths)):
-##    embedding_objs = DeepFace.represent(img_path = imgPaths[i])
-
-## Initialize boolean matrix to identify if any of the faces captured in the frame match an admin face
-adminStatus = [False]
+## Initialize list to identify if any of the faces captured in the frame match a face in database
 adminFace = [""]
 
 ## Initialize selected camera and camera window
@@ -77,30 +64,34 @@ while True:
     cv2.imshow("Test", frame)                                       ## Show display window; Unnecessary in final implementation unless live video display would be interrupted otherwise
 
     k = cv2.waitKey(1)                                              ## Initialize trigger; Unnecessary in final implementatiion assuming full script is run on trigger (gesture)
+
+    if k == ord('q') :
+        exit()
+
     if k == ord('c'):                                               ## Designate trigger, currently letter c on keyboard; Unnecessary in final implementatiion assuming full script is run on trigger
         testImg = "Test.jpg"                                        ## Define name for captured frame
         cv2.imwrite(testImg, frame)                                 ## Capture frame
+        try:
+            embedTest = DeepFace.represent(img_path = testImg)[0]['embedding']
+        except ValueError:
+            embedTest = []
+            print("Please retake image")
         for j in range(0,len(imgPaths)):                            ## Loop through each admin face and test if any faces captured on frame match admin
             try:
-                result = DeepFace.verify(img1_path = imgPaths[j], 
-                          img2_path = "Test.jpg", 
-                          distance_metric = metrics[1],
-                          model_name = models[0]    
+                result = DeepFace.verify(img1_path = embeddings[j], 
+                            img2_path = embedTest, 
+                            distance_metric = metrics[1],
+                            model_name = models[0],
+                            silent = True
                 )
-                adminStatus.append(result['verified'])              ## Print boolean verified result to adminStatus boolean array
                 if result['verified'] == True :
-                    adminFace.append(adminNames[j])                 ## If any of the admin faces match, adminFace is updated
+                    adminTest = imgPaths[j]                         ## If any of the admin faces match, adminFace is updated
+                    adminFace.append(adminTest[13:-4])
                 print(j)
             except ValueError:                                      ## If no face is detected in frame, return false
-                adminStatus.append(False)
                 adminFace.append("No Face Detected")
-
-        adminVerify = adminStatus[1:]
-        adminStatus = [False]                                       ## Reset adminStatus for next capture
         if len(adminFace)== 1 :
             adminFace.append("Stranger")                            ## if no admin faces match, adminFace is updated with Stranger
-        faceRecognized = adminFace[1:]
+        faceRecognized = adminFace[1]
         adminFace = [""]                                            ## Reset adminFace for next capture
-        
-        print(adminVerify)                                          ## Print boolean value of if admin or not
         print(faceRecognized)                                       ## Print names of faces recognized
