@@ -65,21 +65,23 @@ while True:
     
     k = cv2.waitKey(1)                                                                          ## Initialize trigger
 
-    if k == ord('q') :                                                                          ## Designate trigger for quitting, currently letter q
+    if k == ord('/') :                                                                          ## Designate trigger for quitting, currently / forward slash
         exit()
 
-    if k == ord('e') :                                                                          ## Designate trigger for embedding, currently letter e
-        embedImg = imgLoc + "\\" + input("Please input name: ") + ".jpg"                        ## Prompt name for individual being embedded
+    if k == ord(',') :                                                                          ## Designate trigger for embedding, currently , comma
+        embedName = input("Please input name: ")                                                ## Prompt name for individual being embedded
+        embedImg = imgLoc + "\\" + embedName + ".jpg"
         cv2.imwrite(embedImg, frame)                                                            ## Capture frame
         try:
             embedTest = DeepFace.represent(img_path = embedImg)[0]['embedding']
             embeddings.append(embedTest)
             imgPaths.append(embedImg)
+            print("Face Embedded")
         except ValueError :
             embedTest = []
             print("Please retake image")
 
-    if k == ord('c') :                                                                          ## Designate trigger for capturing, currently letter c 
+    if k == ord('.') :                                                                          ## Designate trigger for capturing, currently . period
         testImg = "Test.jpg"                                                                    ## Define name for captured frame
         cv2.imwrite(testImg, frame)                                                             ## Capture frame
 
