@@ -8,7 +8,7 @@ Use ',' keypress to live embed new face
 Use '.' keypress to capture and compare most prominent face in frame with saved embeddings
 Use '/' keypress to exit script
 
-To add images to admin database, add "NAME.jpg" file to imgDataCount directory, or use live embed function in DeepFaceTriggerBound
+To add images to admin database, add "NAME.jpg" file to imgDataCount directory, or use live embed function in DeepFaceTriggerBound. If using different directory, please update imgLoc const in code.
 
 
 Main Dependencies:
