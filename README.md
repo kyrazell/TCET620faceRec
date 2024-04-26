@@ -18,6 +18,8 @@ Python 3.11.0
 deepface 0.0.89
 
 tensorflow 2.12
+
+letters.py: Ensure letters.py is in virtual environment for send_to_studio function
 ***
 DeepFaceTriggerTest.py is the standalone script used for testing and implementation [DEPRECATED]
 
