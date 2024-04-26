@@ -6,48 +6,7 @@ import numpy as np
 import cv2
 import fnmatch
 import os
-
-#Drawing Letter Python Code.txt
-import socket
-
-def send_to_studio(name):
-    # Create a socket object
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-    print('connecting')
-
-    # Connect to RobotStudio
-    client_socket.settimeout(None)
-    client_socket.connect(('192.168.125.1', 5024))
-    
-    while True:
-        if len(name) <= 8:
-        # Chec all characters are either alphabets or spaces
-            if name.isalpha() or ' ' in name:
-                break
-            else:
-                print("Invalid input. Please enter alphabets and spaces only.")
-        else:
-            toadd = 8 - len(name)
-            for i in toadd:
-                name = name + ' '
-            break
-            
-    print("Valid input:", name)
-
-    # Prepare the data in the required format to send to RobotStudio
-    data_to_send = name + "."
-        
-    # Print the data being sent
-    print(f"Sending: {data_to_send}")
-
-
-    # Send the data to RobotStudio
-    client_socket.sendall(data_to_send.encode())
-    
-    # Close the socket
-    client_socket.close()
-
+import letters
 
 ## Define different model types, metrics and backends available for DeepFace as array for human readability
 models = [
@@ -158,4 +117,4 @@ while True:
         faceRecognized = adminFace[1]
         adminFace = [""]                                                                        ## Reset adminFace for next capture
         print(faceRecognized)                                                                   ## Print name of face recognized
-        send_to_studio(faceRecognized)                                                          ## Send string to Robot Studio
+        letters.send_to_studio("H" + faceRecognized)                                            ## Send string to Robot Studio
