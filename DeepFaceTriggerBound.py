@@ -1,12 +1,18 @@
 ## Import DeepFace for facial recognition
 ## Import numpy for boolean arrays
 ## Import cv2 for Image Capture
+## Import os for reading directory
+## Import letters for output to RobotStudio
+## Import socket for connecting to RobotStudio
 from deepface import DeepFace
 import numpy as np
 import cv2
-import fnmatch
 import os
 import letters
+import socket
+
+## Create a socket object
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 ## Define different model types, metrics and backends available for DeepFace as array for human readability
 models = [
@@ -52,6 +58,9 @@ print(imgPaths)
 
 ## Initialize list to identify if any of the faces captured in the frame match a face in database
 adminFace = [""]
+
+## Connect to RobotStudio
+letters.connect_to_robot()
 
 ## Initialize selected camera and camera window
 liveCam = cv2.VideoCapture(0)
